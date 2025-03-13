@@ -21,7 +21,8 @@ const PostList = () => {
     fetchPosts();
   }, []);
 
-  if (loading) return <p>Loading posts...</p>;
+  if (loading)
+    return <p className="text-center mt-4">Loading posts...</p>;
 
   return (
     <div className="container my-4">
@@ -30,21 +31,21 @@ const PostList = () => {
       <div className="row">
         {posts.map((post) => (
           <div className="col-md-4 mb-3" key={post.id}>
-            <div className="card h-100">
+            <div className="card h-100 shadow-sm">
               {post.imageUrl && (
                 <img
                   src={post.imageUrl}
                   className="card-img-top"
                   alt={post.title}
-                  style={{maxHeight: '200px', objectFit: 'cover'}}
+                  style={{ maxHeight: '200px', objectFit: 'cover' }}
                 />
               )}
-              <div className="card-body">
+              <div className="card-body d-flex flex-column">
                 <h5 className="card-title">{post.title}</h5>
                 <p className="card-text">
                   {post.content.substring(0, 100)}...
                 </p>
-                <Link to={`/posts/${post.id}`} className="btn btn-primary">
+                <Link to={`/posts/${post.id}`} className="btn btn-primary mt-auto">
                   Read More
                 </Link>
               </div>

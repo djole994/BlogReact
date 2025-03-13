@@ -19,38 +19,43 @@ const Register = () => {
 
   return (
     <div style={{ padding: '1rem' }}>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username: </label>
-          <input 
+      <h2 className="mb-4">Register</h2>
+      <form onSubmit={handleSubmit} className="container my-4" style={{ maxWidth: '400px' }}>
+        <div className="mb-3">
+          <label className="form-label">Username</label>
+          <input
             type="text"
+            className="form-control"
             value={username}
-            onChange={e => setUsername(e.target.value)}
-            required 
+            onChange={(e) => setUsername(e.target.value)}
+            required
           />
         </div>
-        <div>
-          <label>Email: </label>
-          <input 
+        <div className="mb-3">
+          <label className="form-label">Email</label>
+          <input
             type="email"
+            className="form-control"
             value={email}
-            onChange={e => setEmail(e.target.value)}
-            required 
+            onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
-        <div>
-          <label>Password: </label>
-          <input 
+        <div className="mb-3">
+          <label className="form-label">Password</label>
+          <input
             type="password"
+            className="form-control"
             value={password}
-            onChange={e => setPassword(e.target.value)}
-            required 
+            onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
-        <button type="submit">Register</button>
+        <button type="submit" className="btn btn-primary w-100">
+          Register
+        </button>
+        {message && <div className="alert alert-info mt-3">{message}</div>}
       </form>
-      {message && <p>{message}</p>}
     </div>
   );
 };
