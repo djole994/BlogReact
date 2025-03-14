@@ -97,16 +97,46 @@ const PostDetail = () => {
         <p>No comments yet.</p>
       ) : (
         <ul className="list-group">
-          {comments.map((comment) => (
+        {comments.map((comment) => {
+          console.log('User for comment', comment.id, comment.user);
+          
+          const fileName = comment.user?.profileImageUrl;
+          const imageUrl = fileName && fileName.trim() !== ''
+            ? `http://localhost:5050/${fileName.trim()}`
+            : 'http://localhost:5050/uploads/default-avatar.png';
+          
+
+          
+          
+          return (
             <li
               key={comment.id}
-              className={`list-group-item ${comment.user?.username === currentUsername ? 'bg-light border-primary' : ''}`}
+              className={`list-group-item d-flex align-items-center ${
+                comment.user?.username === currentUsername ? 'bg-light border-primary' : ''
+              }`}
             >
-              <strong>{comment.user?.username || 'Unknown User'}: </strong>
-              {comment.content}
+              <img
+                src={imageUrl}
+                alt={comment.user?.username || 'Unknown User'}
+                style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  marginRight: '10px',
+                  objectFit: 'cover',
+                }}
+              />
+              <div style={{ flex: 1 }}>
+                <strong>{comment.user?.username || 'Unknown User'}: </strong>
+                {comment.content}
+              </div>
             </li>
-          ))}
-        </ul>
+          );
+        })}
+      </ul>
+      
+      
+      
       )}
 
       {token ? (

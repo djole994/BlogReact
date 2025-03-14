@@ -5,12 +5,24 @@ const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [profileImage, setProfileImage] = useState(null); // novo stanje za fajl
   const [message, setMessage] = useState('');
 
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const response = await api.post('/auth/register', { username, email, password });
+      // Koristi FormData za slanje multipart/form-data zahteva
+      const formData = new FormData();
+      formData.append('username', username);
+      formData.append('email', email);
+      formData.append('password', password);
+      if (profileImage) {
+        formData.append('profileImage', profileImage);
+      }
+
+      const response = await api.post('/auth/register', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
       setMessage(response.data.message || 'Registration successful!');
     } catch (error) {
       setMessage(error.response?.data || 'Registration error');
@@ -51,11 +63,22 @@ const Register = () => {
             required
           />
         </div>
+        <div className="mb-3">
+          <label className="form-label">Profile Image</label>
+          <input
+            type="file"
+            className="form-control"
+            onChange={(e) => {
+              if (e.target.files && e.target.files.length > 0) {
+                setProfileImage(e.target.files[0]);
+              }
+            }}
+          />
+        </div>
         <button type="submit" className="btn btn-primary w-100">
           Register
         </button>
         {message && <div className="alert alert-info mt-3">{message}</div>}
-        navigate("/posts");
       </form>
     </div>
   );
