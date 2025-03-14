@@ -55,6 +55,7 @@ const Register = () => {
           Register
         </button>
         {message && <div className="alert alert-info mt-3">{message}</div>}
+        navigate("/posts");
       </form>
     </div>
   );

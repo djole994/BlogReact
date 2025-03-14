@@ -1,23 +1,57 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Layout/Navbar';
-import Login from './components/Auth/Login';
-import Register from './components/Auth/Register';
-import PostList from './components/Posts/PostList';
-import PostDetail from './components/Posts/PostDetail';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Layout/Navbar";
+import Login from "./components/Auth/Login";
+import PostList from "./components/Posts/PostList";
+import CreatePost from "./components/Posts/CreatePost";
+import PostDetail from "./components/Posts/PostDetail";
+import Register from "./components/Auth/Register";
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function App() {
+  const [user, setUser] = useState(null);
+
+  // Ako je korisnik već ulogovan, povucimo ga iz localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem("username");
+    if (storedUser) {
+      setUser(storedUser);
+    }
+  }, []);
+
   return (
     <Router>
-      <Navbar />
+      {/* Navbar dobija props user i setUser */}
+      <Navbar user={user} setUser={setUser} />
+      
       <Routes>
         <Route path="/" element={<PostList />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        
+        {/* Ako korisnik nije ulogovan, ne može da kreira post */}
+        <Route
+          path="/create-post"
+          element={
+            user ? (
+              <CreatePost />
+            ) : (
+              <h3 className="mt-4 text-center">Please log in to create a post</h3>
+            )
+          }
+        />
+
+        {/* Login komponenti prosledimo setUser da možemo ažurirati stanje */}
+        <Route path="/login" element={<Login setUser={setUser} />} />
+
         <Route path="/posts" element={<PostList />} />
-        <Route path="/posts/:id" element={<PostDetail />} />
+     
+        <Route path="/posts/:id" element={<PostDetail user={user} />} />
+        <Route
+          path="/posts/:id"
+          element={<PostDetail user={user} />}
+        />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );

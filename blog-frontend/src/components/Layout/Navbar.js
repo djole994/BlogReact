@@ -1,40 +1,59 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Navbar, Nav, Container, Button } from "react-bootstrap";
 
-const Navbar = () => {
+const Navigation = ({ user, setUser }) => {
+  const handleLogout = () => {
+    // Brisanje tokena i username-a iz localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    // Ažuriranje user state-a (App.js)
+    setUser(null);
+  };
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-      <div className="container">
-        <Link className="navbar-brand fw-bold" to="/">
-          My Blog
-        </Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNavAltMarkup"
-          aria-controls="navbarNavAltMarkup"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon" />
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div className="navbar-nav ms-auto">
-            <Link className="nav-link" to="/login">
-              Login
-            </Link>
-            <Link className="nav-link" to="/register">
-              Register
-            </Link>
-            <Link className="nav-link" to="/posts">
+    <Navbar bg="dark" variant="dark" expand="lg">
+      <Container>
+        <Navbar.Brand as={Link} to="/">
+          MyBlog
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link as={Link} to="/posts">
               Posts
-            </Link>
-          </div>
-        </div>
-      </div>
-    </nav>
+            </Nav.Link>
+            {user && (
+              <Nav.Link as={Link} to="/create-post">
+                New Post
+              </Nav.Link>
+            )}
+          </Nav>
+          <Nav>
+            {user ? (
+              <>
+                <Navbar.Text className="me-3">
+                  Hello, {user}!
+                </Navbar.Text>
+                <Button variant="outline-light" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Nav.Link as={Link} to="/login">
+                  Login
+                </Nav.Link>
+                <Nav.Link as={Link} to="/register">
+                  Register
+                </Nav.Link>
+              </>
+            )}
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };
 
-export default Navbar;
+export default Navigation;
