@@ -5,27 +5,33 @@ const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [postImage, setPostImage] = useState(null);
 
   const handleCreatePost = async () => {
     try {
-      // Ako API zahteva token:
       const token = localStorage.getItem("token");
-      await api.post(
-        "/posts",
-        { title, content,imageUrl
-              },
-        {
-          headers: { Authorization: `Bearer ${token}` }
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("content", content);
+      if (postImage) {
+        formData.append("postImage", postImage);
+      }
+      await api.post("/posts", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data"
         }
-      );
+      });
       alert("Post created!");
       setTitle("");
       setContent("");
+      setPostImage(null);
     } catch (error) {
       console.error("Error creating post:", error);
       alert("Failed to create post");
     }
   };
+  
 
   return (
     <div style={{ maxWidth: "500px", margin: "auto", padding: "1rem" }}>
@@ -46,6 +52,19 @@ const CreatePost = () => {
           onChange={e => setContent(e.target.value)}
         />
       </div>
+      <div className="mb-3">
+  <label>Post Image</label>
+  <input
+    type="file"
+    className="form-control"
+    onChange={e => {
+      if (e.target.files && e.target.files.length > 0) {
+        setPostImage(e.target.files[0]);
+      }
+    }}
+  />
+</div>
+
       <button className="btn btn-primary" onClick={handleCreatePost}>
         Create
       </button>

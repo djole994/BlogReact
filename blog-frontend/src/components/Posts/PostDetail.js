@@ -128,15 +128,20 @@ const [editCommentContent, setEditCommentContent] = useState('');
   return (
     <div className="container my-4">
       <h2 className="mb-3">{post.title}</h2>
+      <p className="text-muted">Created at: {new Date(post.createdAt).toLocaleString()}</p>
       <p>{post.content}</p>
       {post.imageUrl && (
-        <img 
-          src={post.imageUrl}
-          alt={post.title}
-          className="img-fluid my-3"
-          style={{ maxWidth: '400px' }}
-        />
-      )}
+  <img
+    src={
+      post.imageUrl.startsWith("http")
+        ? post.imageUrl
+        : `http://localhost:5050/${post.imageUrl.trim()}`
+    }
+    className="card-img-top"
+    alt={post.title}
+    style={{ maxHeight: '200px', objectFit: 'cover' }}
+  />
+)}
       <p className="text-muted">Created at: {new Date(post.createdAt).toLocaleString()}</p>
 
       <hr />
@@ -159,62 +164,79 @@ const [editCommentContent, setEditCommentContent] = useState('');
             <li
               key={comment.id}
               className={`list-group-item d-flex align-items-center ${
-                comment.user?.username === currentUsername ? 'bg-light border-primary' : ''
+                comment.user?.username === currentUsername
+                  ? "bg-light border-primary"
+                  : ""
               }`}
             >
               <img
                 src={imageUrl}
-                alt={comment.user?.username || 'Unknown User'}
+                alt={comment.user?.username || "Unknown User"}
                 style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  marginRight: '10px',
-                  objectFit: 'cover',
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  marginRight: "10px",
+                  objectFit: "cover",
                 }}
               />
-           <div style={{ flex: 1 }}>
-  <strong>{comment.user?.username || 'Unknown User'}: </strong>
-  {editCommentId === comment.id ? (
-    <input
-      type="text"
-      value={editCommentContent}
-      onChange={(e) => setEditCommentContent(e.target.value)}
-      className="form-control form-control-sm"
-    />
-  ) : (
-    comment.content
-  )}
-</div>
+              <div style={{ flex: 1 }}>
+                <strong>{comment.user?.username || "Unknown User"}: </strong>
+                {editCommentId === comment.id ? (
+                  <input
+                    type="text"
+                    value={editCommentContent}
+                    onChange={(e) => setEditCommentContent(e.target.value)}
+                    className="form-control form-control-sm"
+                  />
+                ) : (
+                  comment.content
+                )}
+              </div>
 
-{comment.userId === currentUserId && (
-  <div style={{ marginLeft: '10px' }}>
-    {editCommentId === comment.id ? (
-      <>
-        <button className="btn btn-sm btn-outline-success me-2" onClick={() => handleSaveEditComment(comment.id)}>
-          Sačuvaj
-        </button>
-        <button className="btn btn-sm btn-outline-secondary" onClick={handleCancelEdit}>
-          Odustani
-        </button>
-      </>
-    ) : (
-      <>
-        <button className="btn btn-sm btn-outline-secondary me-2" onClick={() => handleEditClick(comment)}>
-          Uredi
-        </button>
-        <button className="btn btn-sm btn-outline-danger" onClick={() => {
-          if(window.confirm("Da li ste sigurni da želite da obrišete ovaj komentar?")){
-            handleDeleteComment(comment.id);
-          }
-        }}>
-          Obriši
-        </button>
-      </>
-    )}
-  </div>
-)}
-
+              {comment.userId === currentUserId && (
+                <div style={{ marginLeft: "10px" }}>
+                  {editCommentId === comment.id ? (
+                    <>
+                      <button
+                        className="btn btn-sm btn-outline-success me-2"
+                        onClick={() => handleSaveEditComment(comment.id)}
+                      >
+                        Sačuvaj
+                      </button>
+                      <button
+                        className="btn btn-sm btn-outline-secondary"
+                        onClick={handleCancelEdit}
+                      >
+                        Odustani
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        className="btn btn-sm btn-outline-secondary me-2"
+                        onClick={() => handleEditClick(comment)}
+                      >
+                        Uredi
+                      </button>
+                      <button
+                        className="btn btn-sm btn-outline-danger"
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              "Da li ste sigurni da želite da obrišete ovaj komentar?"
+                            )
+                          ) {
+                            handleDeleteComment(comment.id);
+                          }
+                        }}
+                      >
+                        Obriši
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
             </li>
           );
         })}

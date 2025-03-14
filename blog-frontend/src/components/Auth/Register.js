@@ -30,9 +30,13 @@ const Register = () => {
   };
 
   return (
-    <div style={{ padding: '1rem' }}>
+    <div style={{ padding: "1rem" }}>
       <h2 className="mb-4">Register</h2>
-      <form onSubmit={handleSubmit} className="container my-4" style={{ maxWidth: '400px' }}>
+      <form
+        onSubmit={handleSubmit}
+        className="container my-4"
+        style={{ maxWidth: "400px" }}
+      >
         <div className="mb-3">
           <label className="form-label">Username</label>
           <input
