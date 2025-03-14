@@ -142,7 +142,7 @@ const [editCommentContent, setEditCommentContent] = useState('');
     style={{ maxHeight: '200px', objectFit: 'cover' }}
   />
 )}
-      <p className="text-muted">Created at: {new Date(post.createdAt).toLocaleString()}</p>
+     
 
       <hr />
       <h4 className="mb-3">Comments</h4>
