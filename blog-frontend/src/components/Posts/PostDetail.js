@@ -6,7 +6,13 @@ const PostDetail = () => {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Pretpostavljamo da se token i korisničko ime čuvaju u localStorage nakon logovanja
+  const token = localStorage.getItem('token');
+  const currentUsername = localStorage.getItem('username');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,6 +33,44 @@ const PostDetail = () => {
 
     fetchData();
   }, [id]);
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+    if (!newComment.trim()) return;
+    setSubmitting(true);
+  
+    // Dohvati korisnikov ID iz localStorage
+    const userId = localStorage.getItem("userId");
+  
+    try {
+      const response = await api.post(
+        '/comments',
+        {
+          content: newComment,
+          blogPostId: id,   // promenjeno iz postId u blogPostId
+          userId: parseInt(userId, 10),  // prosleđivanje korisničkog ID-ja kao broj
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+  
+      // Opcija 1: Refetch svih komentara nakon slanja
+      const commentsRes = await api.get(`/comments/post/${id}`);
+      setComments(commentsRes.data);
+  
+      // Opcija 2: Direktno dodavanje novog komentara u state
+      // setComments(prev => [...prev, response.data]);
+  
+      setNewComment('');
+    } catch (error) {
+      console.error('Error posting comment:', error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+  
 
   if (loading)
     return <p className="text-center mt-4">Loading post...</p>;
@@ -54,12 +98,36 @@ const PostDetail = () => {
       ) : (
         <ul className="list-group">
           {comments.map((comment) => (
-            <li key={comment.id} className="list-group-item">
+            <li
+              key={comment.id}
+              className={`list-group-item ${comment.user?.username === currentUsername ? 'bg-light border-primary' : ''}`}
+            >
               <strong>{comment.user?.username || 'Unknown User'}: </strong>
               {comment.content}
             </li>
           ))}
         </ul>
+      )}
+
+      {token ? (
+        <form onSubmit={handleCommentSubmit} className="mt-4">
+          <div className="mb-3">
+            <label htmlFor="newComment" className="form-label">Add a comment</label>
+            <textarea
+              id="newComment"
+              className="form-control"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              rows="3"
+              required
+            ></textarea>
+          </div>
+          <button type="submit" className="btn btn-primary" disabled={submitting}>
+            {submitting ? 'Posting...' : 'Post Comment'}
+          </button>
+        </form>
+      ) : (
+        <p className="mt-4">Please log in to post a comment.</p>
       )}
     </div>
   );

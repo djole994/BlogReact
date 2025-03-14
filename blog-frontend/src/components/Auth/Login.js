@@ -7,10 +7,11 @@ const Login = ({ setUser }) => {
 
   const handleLogin = async () => {
     try {
-      // Pretpostavka: API vraća { token, username, message? } kada se korisnik uloguje
       const response = await api.post("/auth/login", { email, password });
 
-      // Sačuvaj JWT token i username u localStorage
+      // Čuva JWT token,id i username u localStorage
+      localStorage.setItem("userId", response.data.userId);
+
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("username", response.data.username);
 
