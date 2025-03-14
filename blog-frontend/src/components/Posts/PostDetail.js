@@ -10,7 +10,32 @@ const PostDetail = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  // Pretpostavljamo da se token i korisničko ime čuvaju u localStorage nakon logovanja
+  const [editCommentId, setEditCommentId] = useState(null);
+const [editCommentContent, setEditCommentContent] = useState('');
+
+
+  const currentUserId = parseInt(localStorage.getItem("userId"), 10);
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await api.delete(`/comments/${commentId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      // Nakon brisanja, refetch ili uklonite komentar iz state-a
+      const updatedComments = comments.filter((c) => c.id !== commentId);
+      setComments(updatedComments);
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+    }
+  };
+
+  // Funkcija za uređivanje (ukoliko želite implementirati)
+  const handleEditComment = (commentId) => {
+    // Na primer, setujete modal ili state za uređivanje određenog komentara
+    // Ovdje samo placeholder primer:
+    console.log(`Editing comment with ID = ${commentId}`);
+  };
+
+
   const token = localStorage.getItem('token');
   const currentUsername = localStorage.getItem('username');
 
@@ -70,6 +95,29 @@ const PostDetail = () => {
       setSubmitting(false);
     }
   };
+
+// edit
+  const handleEditClick = (comment) => {
+    setEditCommentId(comment.id);
+    setEditCommentContent(comment.content);
+  };
+  const handleSaveEditComment = async (commentId) => {
+    if (!editCommentContent.trim()) return;
+    try {
+      await api.put(`/comments/${commentId}`, { content: editCommentContent }, { headers: { Authorization: `Bearer ${token}` } });
+      const commentsRes = await api.get(`/comments/post/${id}`);
+      setComments(commentsRes.data);
+      setEditCommentId(null);
+      setEditCommentContent('');
+    } catch (error) {
+      console.error('Error updating comment:', error);
+    }
+  };
+  const handleCancelEdit = () => {
+    setEditCommentId(null);
+    setEditCommentContent('');
+  };
+  
   
 
   if (loading)
@@ -98,14 +146,13 @@ const PostDetail = () => {
       ) : (
         <ul className="list-group">
         {comments.map((comment) => {
-          console.log('User for comment', comment.id, comment.user);
           
           const fileName = comment.user?.profileImageUrl;
           const imageUrl = fileName && fileName.trim() !== ''
             ? `http://localhost:5050/${fileName.trim()}`
             : 'http://localhost:5050/uploads/default-avatar.png';
           
-
+      
           
           
           return (
@@ -126,10 +173,48 @@ const PostDetail = () => {
                   objectFit: 'cover',
                 }}
               />
-              <div style={{ flex: 1 }}>
-                <strong>{comment.user?.username || 'Unknown User'}: </strong>
-                {comment.content}
-              </div>
+           <div style={{ flex: 1 }}>
+  <strong>{comment.user?.username || 'Unknown User'}: </strong>
+  {editCommentId === comment.id ? (
+    <input
+      type="text"
+      value={editCommentContent}
+      onChange={(e) => setEditCommentContent(e.target.value)}
+      className="form-control form-control-sm"
+    />
+  ) : (
+    comment.content
+  )}
+</div>
+
+{comment.userId === currentUserId && (
+  <div style={{ marginLeft: '10px' }}>
+    {editCommentId === comment.id ? (
+      <>
+        <button className="btn btn-sm btn-outline-success me-2" onClick={() => handleSaveEditComment(comment.id)}>
+          Sačuvaj
+        </button>
+        <button className="btn btn-sm btn-outline-secondary" onClick={handleCancelEdit}>
+          Odustani
+        </button>
+      </>
+    ) : (
+      <>
+        <button className="btn btn-sm btn-outline-secondary me-2" onClick={() => handleEditClick(comment)}>
+          Uredi
+        </button>
+        <button className="btn btn-sm btn-outline-danger" onClick={() => {
+          if(window.confirm("Da li ste sigurni da želite da obrišete ovaj komentar?")){
+            handleDeleteComment(comment.id);
+          }
+        }}>
+          Obriši
+        </button>
+      </>
+    )}
+  </div>
+)}
+
             </li>
           );
         })}
