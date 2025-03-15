@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 const PostList = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const currentUserId = parseInt(localStorage.getItem("userId"), 10);
+
 
   const fetchPosts = async () => {
     try {
@@ -16,6 +18,23 @@ const PostList = () => {
       setLoading(false);
     }
   };
+  const handleDeletePost = async (postId) => {
+    if (!window.confirm("Da li ste sigurni da želite da obrišete ovaj post?")) {
+      return;
+    }
+  
+    try {
+      const token = localStorage.getItem("token");
+      await api.delete(`/posts/${postId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      // Nakon uspešnog brisanja, refetch ili izbacite post iz state-a:
+      setPosts(posts.filter((p) => p.id !== postId));
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
+  
 
   useEffect(() => {
     fetchPosts();
@@ -54,6 +73,24 @@ const PostList = () => {
                 >
                   Read More
                 </Link>
+
+                  {/* Dugmad Edit / Delete samo ako je post.UserId === currentUserId */}
+        {post.userId === currentUserId && (
+          <div className="mt-2">
+    <Link
+      to={`/posts/${post.id}/edit`}
+      className="btn btn-sm btn-outline-secondary me-2"
+    >
+      Edit
+    </Link>
+            <button
+              className="btn btn-sm btn-outline-danger"
+              onClick={() => handleDeletePost(post.id)}
+            >
+              Delete
+            </button>
+          </div>
+        )}
               </div>
             </div>
           </div>

@@ -6,6 +6,7 @@ import PostList from "./components/Posts/PostList";
 import CreatePost from "./components/Posts/CreatePost";
 import PostDetail from "./components/Posts/PostDetail";
 import Register from "./components/Auth/Register";
+import EditPost from './components/Posts/EditPost';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -28,6 +29,7 @@ function App() {
       
       <Routes>
         <Route path="/" element={<PostList />} />
+        <Route path="/posts/:id/edit" element={<EditPost />} />
         
         {/* Ako korisnik nije ulogovan, ne može da kreira post */}
         <Route
