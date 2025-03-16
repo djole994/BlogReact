@@ -1,0 +1,35 @@
+.post-list-container {
+    margin-top: 1rem;
+  }
+
+  .hero-section {
+    background: linear-gradient(to right, #e8eaf6, #fff);
+    text-align: center;
+    padding: 60px 20px;
+  }
+  
+  .hero-section h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .hero-section p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .hero-btn {
+    font-size: 1.1rem;
+    padding: 0.5rem 1.2rem;
+  }
+  
+  /* Featured card */
+  .featured-card {
+    max-width: 600px;
+  }
+  
+  .featured-card .card-img-top {
+    max-height: 300px;
+    object-fit: cover;
+  }
+  

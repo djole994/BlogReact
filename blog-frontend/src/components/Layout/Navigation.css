@@ -1,0 +1,54 @@
+.custom-navbar {
+    background-color: #fff; 
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .custom-navbar .navbar-brand,
+  .custom-navbar .nav-link,
+  .custom-navbar .navbar-text,
+  .custom-navbar .social-icons a {
+    color: #000 !important;
+  }
+
+  .custom-navbar .btn-outline-dark {
+    color: #000;
+    border-color: #000;
+  }
+  
+  .custom-navbar .btn-outline-dark:hover {
+    background-color: #000;
+    color: #fff;
+  }
+  
+  .custom-navbar.scrolled {
+    background-color: #343a40;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .custom-navbar.scrolled .navbar-brand,
+  .custom-navbar.scrolled .nav-link,
+  .custom-navbar.scrolled .navbar-text,
+  .custom-navbar.scrolled .social-icons a {
+    color: #fff !important;
+  }
+
+  .custom-navbar.scrolled .btn-outline-light {
+    color: #fff;
+    border-color: #fff;
+  }
+  
+  .custom-navbar.scrolled .btn-outline-light:hover {
+    background-color: #fff;
+    color: #343a40;
+  }
+
+  .social-icons a {
+    font-size: 1.2rem;
+    margin-right: 0.6rem;
+    transition: color 0.3s ease;
+  }
+  
+  .social-icons a:hover {
+    color: #888;
+  }
+  

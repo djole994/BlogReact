@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Layout/Navbar";
+import Navbar from "./components/Layout/Layout";
 import Login from "./components/Auth/Login";
 import PostList from "./components/Posts/PostList";
 import CreatePost from "./components/Posts/CreatePost";
