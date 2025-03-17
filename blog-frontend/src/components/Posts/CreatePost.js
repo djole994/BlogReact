@@ -6,6 +6,8 @@ const CreatePost = () => {
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [postImage, setPostImage] = useState(null);
+  const [category, setCategory] = useState("");
+  const categories = ["Sport", "Priroda", "Ljepota"]; 
 
   const handleCreatePost = async () => {
     try {
@@ -13,6 +15,8 @@ const CreatePost = () => {
       const formData = new FormData();
       formData.append("title", title);
       formData.append("content", content);
+      formData.append("category", category);
+
       if (postImage) {
         formData.append("postImage", postImage);
       }
@@ -44,6 +48,20 @@ const CreatePost = () => {
           onChange={e => setTitle(e.target.value)}
         />
       </div>
+      <div className="mb-3">
+        <label>Category</label>
+        <select
+          className="form-control"
+            value={category}
+              onChange={e => setCategory(e.target.value)}
+        >
+    <option value="">Select a category</option>
+    {categories.map(cat => (
+      <option key={cat} value={cat}>{cat}</option>
+    ))}
+  </select>
+</div>
+
       <div className="mb-3">
         <label>Content</label>
         <textarea

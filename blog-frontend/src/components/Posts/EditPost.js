@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../api";
 
+
+
+
 const EditPost = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -10,13 +13,16 @@ const EditPost = () => {
   const [content, setContent] = useState("");
   const [oldImageUrl, setOldImageUrl] = useState("");
   const [newImageFile, setNewImageFile] = useState(null);
-
+  const [category, setCategory] = useState("");
+  const categories = ["Sport", "Priroda", "Ljepota"]; 
   useEffect(() => {
     const fetchPost = async () => {
       try {
         const res = await api.get(`/posts/${id}`);
         setTitle(res.data.title);
         setContent(res.data.content);
+        setCategory(res.data.category || "");
+
         setOldImageUrl(res.data.imageUrl || "");
       } catch (error) {
         console.error("Error fetching post:", error);
@@ -32,6 +38,8 @@ const EditPost = () => {
       const formData = new FormData();
       formData.append("title", title);
       formData.append("content", content);
+      formData.append("category", category);
+
 
       // Ako je korisnik izabrao novu sliku, šaljemo je
       if (newImageFile) {
@@ -75,6 +83,20 @@ const EditPost = () => {
             rows={4}
           ></textarea>
         </div>
+
+        <div className="mb-3">
+          <label>Category</label>
+            <select
+                className="form-control"
+                    value={category}
+                     onChange={e => setCategory(e.target.value)}
+                >
+            <option value="">Select a category</option>
+    {categories.map(cat => (
+      <option key={cat} value={cat}>{cat}</option>
+    ))}
+  </select>
+</div>
 
         <div className="mb-3">
           <label className="form-label">Current Image:</label>
