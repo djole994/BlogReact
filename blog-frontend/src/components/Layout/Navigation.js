@@ -29,7 +29,7 @@ const Navigation = ({ user, setUser }) => {
     >
       <Container>
         <Navbar.Brand as={Link} to="/">
-          MyBlog
+        <img src="/img/logo.png" alt="MyBlog Logo" height="80" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

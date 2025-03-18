@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../api";
 import { Link } from "react-router-dom";
-import "./PostList.css"; // Dodajte CSS za još ljepši izgled (hero, section itd.)
+import "./PostList.css";
 
 const PostList = () => {
   const [posts, setPosts] = useState([]);
@@ -42,7 +42,10 @@ const PostList = () => {
   };
 
   // Izvučemo sve kategorije iz postova (i uklonimo duplikate)
-  const categories = ["All", ...new Set(posts.map((p) => p.category).filter(Boolean))];
+  const categories = [
+    "All",
+    ...new Set(posts.map((p) => p.category).filter(Boolean)),
+  ];
 
   // Filtrirani postovi prema odabranoj kategoriji
   const filteredPosts =
@@ -60,12 +63,22 @@ const PostList = () => {
   return (
     <div className="post-list-container">
       {/* Hero sekcija */}
-      <div className="hero-section">
-        <h1>Welcome to MyBlog!</h1>
-        <p>Your daily dose of awesome articles and stories.</p>
-        <Link to="/create-post" className="btn btn-primary hero-btn">
-          Write a New Post
-        </Link>
+      <div
+        className="hero-section text-center text-white py-5"
+        style={{
+          background: "linear-gradient(135deg, #667eea, #764ba2)",
+          borderRadius: "0 0 10px 10px",
+        }}
+      >
+        <div className="container">
+          <h1 className="display-4 fw-bold">Welcome to MyBlog!</h1>
+          <p className="lead">
+            Your daily dose of awesome articles and stories.
+          </p>
+          <Link to="/create-post" className="btn btn-light btn-lg mt-3">
+            Write a New Post
+          </Link>
+        </div>
       </div>
 
       {/* Featured sekcija */}
@@ -89,7 +102,10 @@ const PostList = () => {
               <p className="card-text">
                 {featuredPost.content.substring(0, 100)}...
               </p>
-              <Link to={`/posts/${featuredPost.id}`} className="btn btn-primary">
+              <Link
+                to={`/posts/${featuredPost.id}`}
+                className="btn btn-primary"
+              >
                 Read More
               </Link>
             </div>
@@ -99,7 +115,7 @@ const PostList = () => {
 
       {/* Kategorije - Filter */}
       <div className="container my-4">
-        <div className="d-flex align-items-center mb-3">
+        <div className="d-flex align-items-center justify-content-between flex-wrap">
           <h2 className="me-3 mb-0">Posts</h2>
           <select
             value={selectedCategory}
@@ -115,7 +131,9 @@ const PostList = () => {
         </div>
 
         {/* Lista postova (filtriranih) */}
-        {filteredPosts.length === 0 && <p>No posts available in this category.</p>}
+        {filteredPosts.length === 0 && (
+          <p>No posts available in this category.</p>
+        )}
         <div className="row">
           {filteredPosts.map((post) => (
             <div className="col-md-4 mb-3" key={post.id}>
@@ -134,9 +152,16 @@ const PostList = () => {
                 )}
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title">{post.title}</h5>
-                  <p className="card-text">{post.content.substring(0, 100)}...</p>
-                  <p className="text-muted mb-1">Category: {post.category || "N/A"}</p>
-                  <Link to={`/posts/${post.id}`} className="btn btn-primary mt-auto">
+                  <p className="card-text">
+                    {post.content.substring(0, 100)}...
+                  </p>
+                  <p className="text-muted mb-1">
+                    Category: {post.category || "N/A"}
+                  </p>
+                  <Link
+                    to={`/posts/${post.id}`}
+                    className="btn btn-primary mt-auto"
+                  >
                     Read More
                   </Link>
                   {post.userId === currentUserId && (
