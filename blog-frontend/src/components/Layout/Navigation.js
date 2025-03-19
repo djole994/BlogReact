@@ -29,7 +29,7 @@ const Navigation = ({ user, setUser }) => {
     >
       <Container>
         <Navbar.Brand as={Link} to="/">
-        <img src="/img/logo.png" alt="MyBlog Logo" height="80" />
+          <img src="/img/logo.png" alt="MyBlog Logo" height="80" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -43,6 +43,12 @@ const Navigation = ({ user, setUser }) => {
                 New Post
               </Nav.Link>
             )}
+            <Nav.Link as={Link} to="/about">
+              About
+            </Nav.Link>
+            <Nav.Link as={Link} to="/contact">
+              Contact
+            </Nav.Link>
           </Nav>
 
           {/* Društvene mreže */}
@@ -63,7 +69,10 @@ const Navigation = ({ user, setUser }) => {
             {user ? (
               <>
                 <Navbar.Text className="me-3">Hello, {user}!</Navbar.Text>
-                <Button variant={scrolled ? "outline-light" : "outline-dark"} onClick={handleLogout}>
+                <Button
+                  variant={scrolled ? "outline-light" : "outline-dark"}
+                  onClick={handleLogout}
+                >
                   Logout
                 </Button>
               </>

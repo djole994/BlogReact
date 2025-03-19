@@ -29,7 +29,6 @@ const PostList = () => {
     if (!window.confirm("Da li ste sigurni da želite da obrišete ovaj post?")) {
       return;
     }
-
     try {
       const token = localStorage.getItem("token");
       await api.delete(`/posts/${postId}`, {
@@ -41,13 +40,10 @@ const PostList = () => {
     }
   };
 
-  // Izvučemo sve kategorije iz postova (i uklonimo duplikate)
-  const categories = [
-    "All",
-    ...new Set(posts.map((p) => p.category).filter(Boolean)),
-  ];
 
-  // Filtrirani postovi prema odabranoj kategoriji
+  const categories = ["All", ...new Set(posts.map((p) => p.category).filter(Boolean))];
+
+
   const filteredPosts =
     selectedCategory === "All"
       ? posts
@@ -57,24 +53,23 @@ const PostList = () => {
     return <p className="text-center mt-4">Loading posts...</p>;
   }
 
-  // Primjer: “Featured post” - uzmemo prvi (ili neki nasumični) ako postoji
+ // prvi post
   const featuredPost = posts.length > 0 ? posts[0] : null;
 
   return (
-    <div className="post-list-container">
+    <div className="post-list-container" style={{ backgroundColor: "#f7f8fa", minHeight: "100vh" }}>
       {/* Hero sekcija */}
       <div
-        className="hero-section text-center text-white py-5"
+        className="hero-section text-center text-white py-5 mb-5"
         style={{
           background: "linear-gradient(135deg, #667eea, #764ba2)",
-          borderRadius: "0 0 10px 10px",
+          borderRadius: "0 0 20px 20px",
+          boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
         }}
       >
         <div className="container">
           <h1 className="display-4 fw-bold">Welcome to MyBlog!</h1>
-          <p className="lead">
-            Your daily dose of awesome articles and stories.
-          </p>
+          <p className="lead">Your daily dose of awesome articles and stories.</p>
           <Link to="/create-post" className="btn btn-light btn-lg mt-3">
             Write a New Post
           </Link>
@@ -83,9 +78,9 @@ const PostList = () => {
 
       {/* Featured sekcija */}
       {featuredPost && (
-        <div className="featured-section container my-4">
-          <h2 className="mb-3 text-center">Featured Post</h2>
-          <div className="card featured-card mx-auto">
+        <div className="featured-section container mb-5">
+          <h2 className="mb-4 text-center fw-bold">Featured Post</h2>
+          <div className="card featured-card mx-auto shadow-lg" style={{ borderRadius: "15px", maxWidth: "800px" }}>
             {featuredPost.imageUrl && (
               <img
                 src={
@@ -95,6 +90,7 @@ const PostList = () => {
                 }
                 className="card-img-top"
                 alt={featuredPost.title}
+                style={{ borderTopLeftRadius: "15px", borderTopRightRadius: "15px", maxHeight: "400px", objectFit: "cover" }}
               />
             )}
             <div className="card-body">
@@ -102,10 +98,7 @@ const PostList = () => {
               <p className="card-text">
                 {featuredPost.content.substring(0, 100)}...
               </p>
-              <Link
-                to={`/posts/${featuredPost.id}`}
-                className="btn btn-primary"
-              >
+              <Link to={`/posts/${featuredPost.id}`} className="btn btn-primary">
                 Read More
               </Link>
             </div>
@@ -113,31 +106,31 @@ const PostList = () => {
         </div>
       )}
 
-      {/* Kategorije - Filter */}
-      <div className="container my-4">
-        <div className="d-flex align-items-center justify-content-between flex-wrap">
-          <h2 className="me-3 mb-0">Posts</h2>
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="form-select w-auto"
-          >
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
+      {/* Filter - kategorije  */}
+      <div className="container mb-4">
+        <h2 className="fw-bold mb-3">Posts</h2>
+        <ul className="nav nav-pills mb-3">
+          {categories.map((cat) => (
+            <li className="nav-item" key={cat}>
+              <button
+                className={`nav-link ${cat === selectedCategory ? "active" : ""}`}
+                onClick={() => setSelectedCategory(cat)}
+                style={{ cursor: "pointer" }}
+              >
                 {cat}
-              </option>
-            ))}
-          </select>
-        </div>
+              </button>
+            </li>
+          ))}
+        </ul>
 
         {/* Lista postova (filtriranih) */}
         {filteredPosts.length === 0 && (
-          <p>No posts available in this category.</p>
+          <p className="text-muted">No posts available in this category.</p>
         )}
         <div className="row">
           {filteredPosts.map((post) => (
-            <div className="col-md-4 mb-3" key={post.id}>
-              <div className="card h-100 shadow-sm">
+            <div className="col-md-4 mb-4" key={post.id}>
+              <div className="card h-100 shadow-sm" style={{ borderRadius: "15px" }}>
                 {post.imageUrl && (
                   <img
                     src={
@@ -147,25 +140,27 @@ const PostList = () => {
                     }
                     className="card-img-top"
                     alt={post.title}
-                    style={{ maxHeight: "200px", objectFit: "cover" }}
+                    style={{
+                      maxHeight: "200px",
+                      objectFit: "cover",
+                      borderTopLeftRadius: "15px",
+                      borderTopRightRadius: "15px",
+                    }}
                   />
                 )}
                 <div className="card-body d-flex flex-column">
-                  <h5 className="card-title">{post.title}</h5>
-                  <p className="card-text">
+                  <h5 className="card-title fw-bold">{post.title}</h5>
+                  <p className="card-text text-secondary" style={{ flexGrow: 1 }}>
                     {post.content.substring(0, 100)}...
                   </p>
-                  <p className="text-muted mb-1">
-                    Category: {post.category || "N/A"}
+                  <p className="text-muted mb-2">
+                    <small>Category: {post.category || "N/A"}</small>
                   </p>
-                  <Link
-                    to={`/posts/${post.id}`}
-                    className="btn btn-primary mt-auto"
-                  >
+                  <Link to={`/posts/${post.id}`} className="btn btn-primary mt-auto">
                     Read More
                   </Link>
                   {post.userId === currentUserId && (
-                    <div className="mt-2">
+                    <div className="mt-3 d-flex">
                       <Link
                         to={`/posts/${post.id}/edit`}
                         className="btn btn-sm btn-outline-secondary me-2"
