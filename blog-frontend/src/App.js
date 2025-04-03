@@ -9,7 +9,7 @@ import Register from "./components/Auth/Register";
 import EditPost from "./components/Posts/EditPost";
 import About from './components/Layout/About';
 import Contact from './components/Layout/Contact';
-
+import NotificationsPage from "./components/Notification/NotificationPage";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
@@ -56,6 +56,7 @@ function App() {
         <Route path="/posts/:id" element={<PostDetail user={user} />} />
         <Route path="/posts/:id" element={<PostDetail user={user} />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/notifications" element={<NotificationsPage />} />
       </Routes>
     </Router>
   );

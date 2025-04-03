@@ -119,7 +119,7 @@ function renderComments(
             </div>
           )}
 
-          {/* Dugme "Reply" – prikazujemo samo ako nije editovanje */}
+          {/* Dugme "Reply" – prikazujemo samo ako nije editoovanje */}
           {currentUser.id && !isEditing && (
             <button
               className="btn btn-sm btn-outline-info ms-3"
@@ -148,7 +148,10 @@ function renderComments(
               <button
                 type="button"
                 className="btn btn-secondary btn-sm mt-2 ms-2"
-                onClick={() => setReplyParentId(null)}
+                onClick={() => {
+                  setReplyParentId(null);
+                  setNewComment("");
+                }}
               >
                 Cancel
               </button>
@@ -242,8 +245,11 @@ export default function PostDetail() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
+      alert("Comment posted! A notification has been sent to the author.");
       const commentsRes = await api.get(`/comments/post/${id}`);
       setComments(commentsRes.data);
+
       setNewComment("");
       setReplyParentId(null);
     } catch (error) {
@@ -272,7 +278,9 @@ export default function PostDetail() {
   const handleSaveEditComment = async (commentId) => {
     if (!editCommentContent.trim()) return;
     if (containsBadWords(editCommentContent)) {
-      alert("Your edited comment contains offensive words. Please remove them.");
+      alert(
+        "Your edited comment contains offensive words. Please remove them."
+      );
       return;
     }
     try {

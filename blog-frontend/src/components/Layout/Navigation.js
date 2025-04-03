@@ -3,21 +3,42 @@ import { Link } from "react-router-dom";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 import "./Navigation.css";
+import { getNotificationsForUser } from "../Notification/Notification";
+import { FaBell } from "react-icons/fa";
 
 const Navigation = ({ user, setUser }) => {
   const [scrolled, setScrolled] = useState(false);
+  const [notificationsCount, setNotificationsCount] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
     window.addEventListener("scroll", handleScroll);
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const userId = localStorage.getItem("userId");
+        if (user && userId) {
+          const notifications = await getNotificationsForUser(userId);
+          setNotificationsCount(notifications.length);
+        }
+      } catch (error) {
+        console.error("Greška pri dohvaćanju notifikacija:", error);
+      }
+    };
+
+    fetchNotifications();
+  }, [user]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+    localStorage.removeItem("userId");
     setUser(null);
   };
 
@@ -64,10 +85,34 @@ const Navigation = ({ user, setUser }) => {
             </Nav.Link>
           </Nav>
 
-          {/* Login/Logout */}
+          {/* Login/Logout + Notifikacije */}
           <Nav>
             {user ? (
               <>
+                <Nav.Link as={Link} to="/notifications" className="position-relative">
+                <FaBell size={20} />
+                  {notificationsCount > 0 && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        top: "-5px",
+                        right: "-10px",
+                        background: "red",
+                        borderRadius: "50%",
+                        width: "20px",
+                        height: "20px",
+                        color: "#fff",
+                        fontSize: "12px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}
+                    >
+                      {notificationsCount}
+                    </span>
+                  )}
+                </Nav.Link>
+
                 <Navbar.Text className="me-3">Hello, {user}!</Navbar.Text>
                 <Button
                   variant={scrolled ? "outline-light" : "outline-dark"}
